@@ -1,23 +1,48 @@
-package com.scalesec.vulnado;
+To address the remarks provided by SonarQube, we will analyze and fix each issue step by step.
 
-import org.springframework.boot.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.boot.autoconfigure.*;
-import java.util.List;
-import java.io.Serializable;
-import java.io.IOException;
+### Fix for [3] and [4]
+Both lines contain unused imports (`org.springframework.boot.*` and `org.springframework.http.HttpStatus`). These imports should be removed.
 
+### Fix for [8]
+The import `java.io.Serializable` is unused and should also be removed.
 
-@RestController
-@EnableAutoConfiguration
-public class LinksController {
-  @RequestMapping(value = "/links", produces = "application/json")
-  List<String> links(@RequestParam String url) throws IOException{
-    return LinkLister.getLinks(url);
-  }
-  @RequestMapping(value = "/links-v2", produces = "application/json")
-  List<String> linksV2(@RequestParam String url) throws BadRequest{
-    return LinkLister.getLinksV2(url);
-  }
-}
+### Fix for [15] and [19]
+Both lines involve a security hotspot (`java:S3752`) regarding the use of HTTP methods. We need to ensure that allowing safe and unsafe HTTP methods is secure. To address this, we will explicitly specify the allowed HTTP methods (`GET` in this case) for the endpoints.
+
+### ContentEditor Fixes
+Here are the changes to be made:
+
+```json
+ContentEditor({
+  "operations": [
+    {
+      "operation": "DELETE",
+      "lineNumber": 3
+    },
+    {
+      "operation": "DELETE",
+      "lineNumber": 4
+    },
+    {
+      "operation": "DELETE",
+      "lineNumber": 8
+    },
+    {
+      "operation": "REPLACE",
+      "lineNumber": 15,
+      "content": "@RequestMapping(value = \"/links\", produces = \"application/json\", method = RequestMethod.GET)"
+    },
+    {
+      "operation": "REPLACE",
+      "lineNumber": 19,
+      "content": "@RequestMapping(value = \"/links-v2\", produces = \"application/json\", method = RequestMethod.GET)"
+    }
+  ]
+})
+``` 
+
+### Explanation of Changes
+1. **Unused Imports**: Lines 3, 4, and 8 are removed because the imports are not used anywhere in the code.
+2. **Security Hotspot**: Lines 15 and 19 are updated to explicitly specify the HTTP method (`GET`) for the endpoints. This ensures that only safe HTTP methods are allowed, addressing the security concern.
+
+After applying these changes, the code will be cleaner and more secure.
