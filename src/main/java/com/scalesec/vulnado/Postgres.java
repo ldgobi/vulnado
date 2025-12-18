@@ -14,7 +14,7 @@ public class Postgres {
     public static Connection connection() {
         try {
             Class.forName("org.postgresql.Driver");
-            String url = new StringBuilder()
+            var url = new StringBuilder()
                     .append("jdbc:postgresql://")
                     .append(System.getenv("PGHOST"))
                     .append("/")
@@ -31,8 +31,8 @@ public class Postgres {
     public static void setup(){
         try {
             System.out.println("Setting up Database...");
-            Connection c = connection();
-            Statement stmt = c.createStatement();
+            var c = connection();
+            var stmt = c.createStatement();
 
             // Create Schema
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS users(user_id VARCHAR (36) PRIMARY KEY, username VARCHAR (50) UNIQUE NOT NULL, password VARCHAR (50) NOT NULL, created_on TIMESTAMP NOT NULL, last_login TIMESTAMP)");
@@ -64,17 +64,17 @@ public class Postgres {
         try {
 
             // Static getInstance method is called with hashing MD5
-            MessageDigest md = MessageDigest.getInstance("MD5");
+            var md = MessageDigest.getInstance("MD5");
 
             // digest() method is called to calculate message digest
             //  of an input digest() return array of byte
             byte[] messageDigest = md.digest(input.getBytes());
 
             // Convert byte array into signum representation
-            BigInteger no = new BigInteger(1, messageDigest);
+            var no = new BigInteger(1, messageDigest);
 
             // Convert message digest into hex value
-            String hashtext = no.toString(16);
+            var hashtext = no.toString(16);
             while (hashtext.length() < 32) {
                 hashtext = "0" + hashtext;
             }
@@ -88,7 +88,7 @@ public class Postgres {
     }
 
     private static void insertUser(String username, String password) {
-       String sql = "INSERT INTO users (user_id, username, password, created_on) VALUES (?, ?, ?, current_timestamp)";
+       var sql = "INSERT INTO users (user_id, username, password, created_on) VALUES (?, ?, ?, current_timestamp)";
        PreparedStatement pStatement = null;
        try {
           pStatement = connection().prepareStatement(sql);
@@ -102,7 +102,7 @@ public class Postgres {
     }
 
     private static void insertComment(String username, String body) {
-        String sql = "INSERT INTO comments (id, username, body, created_on) VALUES (?, ?, ?, current_timestamp)";
+        var sql = "INSERT INTO comments (id, username, body, created_on) VALUES (?, ?, ?, current_timestamp)";
         PreparedStatement pStatement = null;
         try {
             pStatement = connection().prepareStatement(sql);

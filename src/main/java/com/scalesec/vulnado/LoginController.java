@@ -26,14 +26,10 @@ public class LoginController {
   }
 }
 
-class LoginRequest implements Serializable {
-  public String username;
-  public String password;
+record LoginRequest(String username, String password) implements Serializable {
 }
 
-class LoginResponse implements Serializable {
-  public String token;
-  public LoginResponse(String msg) { this.token = msg; }
+record LoginResponse(String token) implements Serializable {
 }
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)

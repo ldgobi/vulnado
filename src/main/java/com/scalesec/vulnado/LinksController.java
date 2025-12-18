@@ -21,3 +21,4 @@ public class LinksController {
     return LinkLister.getLinksV2(url);
   }
 }
+
